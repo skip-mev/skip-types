@@ -1,0 +1,6 @@
+[submodule "protos/pob"]
+	path = protos/pob
+	url = https://github.com/skip-mev/pob
+[submodule "protos/block-sdk"]
+	path = protos/block-sdk
+	url = https://github.com/skip-mev/block-sdk

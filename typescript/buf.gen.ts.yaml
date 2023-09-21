@@ -1,0 +1,7 @@
+version: v1
+plugins:
+  - name: ts
+    out: ../../../typescript/src/block-sdk
+    path: ../../../typescript/node_modules/ts-proto/protoc-gen-ts_proto
+    strategy: all
+    opt: no_grpc
