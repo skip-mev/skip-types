@@ -28,6 +28,6 @@
     "src/**/*"
   ],
   "exclude": [
-    "src/block-sdk/google/protobuf/*"
+    "src/skip-types/google/protobuf/*"
   ]
 }
