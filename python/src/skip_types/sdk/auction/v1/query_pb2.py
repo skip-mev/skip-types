@@ -14,7 +14,7 @@ _sym_db = _symbol_database.Default()
 from gogoproto import gogo_pb2 as gogoproto_dot_gogo__pb2
 from google.api import annotations_pb2 as google_dot_api_dot_annotations__pb2
 from cosmos.query.v1 import query_pb2 as cosmos_dot_query_dot_v1_dot_query__pb2
-from sdk.auction.v1 import genesis_pb2 as sdk_dot_auction_dot_v1_dot_genesis__pb2
+from skip_types.sdk.auction.v1 import genesis_pb2 as sdk_dot_auction_dot_v1_dot_genesis__pb2
 
 
 DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x1asdk/auction/v1/query.proto\x12\x0esdk.auction.v1\x1a\x14gogoproto/gogo.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1b\x63osmos/query/v1/query.proto\x1a\x1csdk/auction/v1/genesis.proto\"\x14\n\x12QueryParamsRequest\"K\n\x13QueryParamsResponse\x12\x34\n\x06params\x18\x01 \x01(\x0b\x32\x16.sdk.auction.v1.ParamsB\x04\xc8\xde\x1f\x00R\x06params2\x85\x01\n\x05Query\x12|\n\x06Params\x12\".sdk.auction.v1.QueryParamsRequest\x1a#.sdk.auction.v1.QueryParamsResponse\")\x88\xe7\xb0*\x01\x82\xd3\xe4\x93\x02\x1e\x12\x1c/block-sdk/auction/v1/paramsB/Z-github.com/skip-mev/block-sdk/x/auction/typesb\x06proto3')
