@@ -23,6 +23,8 @@ import { assert } from "@cosmjs/utils";
 import { SignMode } from "cosmjs-types/cosmos/tx/signing/v1beta1/signing";
 import { TxRaw } from "cosmjs-types/cosmos/tx/v1beta1/tx";
 import Long from "long";
+import { MsgAuctionBid as PobMsgAuctionBid } from "../pob/builder/v1/tx";
+import { MsgAuctionBid as SdkMsgAuctionBid } from "../sdk/auction/v1/tx";
 
 export class SigningCosmWasmClientWithTimeout extends SigningCosmWasmClient {
   private readonly signerTimeout: OfflineSigner;
@@ -37,6 +39,33 @@ export class SigningCosmWasmClientWithTimeout extends SigningCosmWasmClient {
     this.signerTimeout = signer;
     // @ts-ignore
     this.aminoTypesTimeout = this.aminoTypes;
+    this.registry.register("/pob.builder.v1.MsgAuctionBid", PobMsgAuctionBid);
+    this.registry.register("/sdk.auction.v1.MsgAuctionBid", SdkMsgAuctionBid);
+  }
+
+  public static async connectWithSigner(
+    endpoint: string,
+    signer: OfflineSigner,
+    options: SigningCosmWasmClientOptions = {},
+  ): Promise<SigningCosmWasmClientWithTimeout> {
+    const tmClient = await Tendermint34Client.connect(endpoint);
+    return new SigningCosmWasmClientWithTimeout(tmClient, signer, options);
+  }
+
+  /**
+   * Creates a client in offline mode.
+   *
+   * This should only be used in niche cases where you know exactly what you're doing,
+   * e.g. when building an offline signing application.
+   *
+   * When you try to use online functionality with such a signer, an
+   * exception will be raised.
+   */
+  public static async offline(
+    signer: OfflineSigner,
+    options: SigningCosmWasmClientOptions = {},
+  ): Promise<SigningCosmWasmClientWithTimeout> {
+    return new SigningCosmWasmClientWithTimeout(undefined, signer, options);
   }
 
   public async signWithTimeout(
