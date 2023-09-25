@@ -1,0 +1,15 @@
+{
+  "name": "skipjs-types-example",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {},
+  "dependencies": {
+    "@cosmjs/cosmwasm-stargate": "^0.31.1",
+    "@cosmjs/proto-signing": "^0.31.1",
+    "cosmjs-types": "^0.8.0",
+    "skipjs-types": "../../typescript"
+  },
+  "author": "",
+  "license": "ISC"
+}
