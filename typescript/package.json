@@ -8,10 +8,15 @@
   },
   "license": "ISC",
   "author": "",
-  "main": "index.js",
+  "files": [
+    "build"
+  ],
   "scripts": {
     "format": "eslint --fix \"./src/**/*.ts\"",
     "build": "tsc --build --clean && tsc --build"
+  },
+  "peerDependencies": {
+    "@cosmjs/cosmwasm-stargate": ">=0.27.0"
   },
   "dependencies": {
     "long": "4.0.0",

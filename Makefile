@@ -5,7 +5,7 @@ proto-typescript:
 	cd $(BLOCK_SDK_PROTO) && buf generate --template ../../../typescript/buf.gen.ts.yaml
 	cd $(POB_SDK_PROTO) && buf generate --template ../../../typescript/buf.gen.ts.yaml
 
-proto-python: 
+proto-python:
 	cd $(BLOCK_SDK_PROTO) && buf generate --template ../../../python/buf.gen.python.yaml
 	cd $(POB_SDK_PROTO) && buf generate --template ../../../python/buf.gen.python.yaml
 

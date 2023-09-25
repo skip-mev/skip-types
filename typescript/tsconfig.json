@@ -28,6 +28,6 @@
     "src/**/*"
   ],
   "exclude": [
-    "src/skip-types/google/protobuf/*"
+    "src/google/protobuf/*"
   ]
 }

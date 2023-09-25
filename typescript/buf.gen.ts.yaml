@@ -1,5 +1,5 @@
 version: v1
 plugins:
   - name: ts
-    out: ../../../typescript/src/skip-types
+    out: ../../../typescript/src
     path: ../../../typescript/node_modules/ts-proto/protoc-gen-ts_proto
