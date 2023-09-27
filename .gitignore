@@ -1,3 +1,6 @@
+python/dist
+python/src/skip_types.egg-info
+
 typescript/node_modules
 typescript/build
 
