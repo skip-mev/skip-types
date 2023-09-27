@@ -10,10 +10,10 @@ def read(fname):
 
 setup(
     name = "skip-types",
-    version = "0.1.4",
-    author = "Jeremy Liu",
-    author_email = "jeremy@skip.money",
-    description = ("A helper library to sign/send bundles and secure transactions to the Skip Relay in Python."),
+    version = "0.1.0",
+    author = "Jan Fabián",
+    author_email = "jan@skip.money",
+    description = ("A helper library to interact with block-sdk."),
     license = "MIT",
     url = "http://packages.python.org/an_example_pypi_project",
     package_dir={'':"src"},
