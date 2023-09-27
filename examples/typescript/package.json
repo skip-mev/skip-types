@@ -7,8 +7,9 @@
   "dependencies": {
     "@cosmjs/cosmwasm-stargate": "^0.31.1",
     "@cosmjs/proto-signing": "^0.31.1",
+    "chain-registry": "^1.20.0",
     "cosmjs-types": "^0.8.0",
-    "skipjs-types": "../../typescript"
+    "skip-types": "^0.1.1"
   },
   "author": "",
   "license": "ISC"
