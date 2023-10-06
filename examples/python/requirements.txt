@@ -1,0 +1,5 @@
+bip-utils==2.7.0
+cosmpy==0.6.0
+httpx==0.23.0
+protobuf==3.20.3
+skip-types==0.1.0

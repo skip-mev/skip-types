@@ -5,3 +5,6 @@ typescript/node_modules
 typescript/build
 
 examples/typescript/node_modules
+
+.vscode
+examples/python/__pycache__
