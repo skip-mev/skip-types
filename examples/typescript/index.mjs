@@ -91,7 +91,6 @@ async function main() {
         accountNumber: accountNumber,
         sequence: sequence,
         chainId: "juno-1",
-        timeoutHeight: (await client.getHeight()) + 1,
       },
     );
     
