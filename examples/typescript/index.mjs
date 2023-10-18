@@ -1,5 +1,5 @@
-import { MsgAuctionBid } from "skipjs-types/build/pob/builder/v1/tx.js";
-import { SigningCosmWasmClientWithTimeout } from "skipjs-types/build/util/index.js";
+import { MsgAuctionBid } from "skip-types/build/pob/builder/v1/tx.js";
+import { SigningCosmWasmClientWithTimeout } from "skip-types/build/util/index.js";
 import { DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
 
 import { TxRaw } from 'cosmjs-types/cosmos/tx/v1beta1/tx.js'
@@ -40,7 +40,7 @@ async function main() {
     
     const msgs = [transferMyselfNative];
     
-    const txRaw = await client.sign(
+    const txRaw = await client.signWithTimeout(
       myAddress,
       msgs,
       {
@@ -53,6 +53,7 @@ async function main() {
         gas: '1000000',
       },
       '',
+      currentBlockHeight + 2,
       {
         accountNumber: accountNumber,
         sequence: sequence + 1,
@@ -101,7 +102,7 @@ async function main() {
     if (r.code !== 0) {
       console.error(r);
     } else {
-      console.log(toHex(r.hash).toUpperCase());
+      console.log(Buffer.from(r.hash).toString("hex").toUpperCase());
     }
 }
 
