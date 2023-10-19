@@ -53,8 +53,9 @@ network_config = NetworkConfig(
 client = LedgerClient(network_config)
 client.txs = FixedTxRestClient(client.txs.rest_client)
 wallet = create_wallet(mnemonic, address_prefix)
+height = query_block_height()
 
-selfPayTestTx = Tx()
+selfPayTestTx = TxWithTimeout()
 msgs = []
 address = str(wallet.address())
 
@@ -78,7 +79,8 @@ selfPayTestTx.seal(
             wallet.public_key(),
             account.sequence+1)],  # Sign with sequence + 1 since this is our backrun tx
     fee=fee,
-    gas_limit=gas_limit
+    gas_limit=gas_limit,
+    timeout_height=height+2
 )
 selfPayTestTx.sign(
     wallet.signer(),
@@ -102,7 +104,6 @@ msg = MsgAuctionBid(
 )
 bidTx.add_message(msg)
 
-height = query_block_height()
 bidTx.seal(
     signing_cfgs=[SigningCfg.direct(
         wallet.public_key(), account.sequence)],
