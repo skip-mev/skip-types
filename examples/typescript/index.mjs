@@ -99,6 +99,7 @@ async function main() {
       return txAuctionRaw
     }
 
+    // Bundle is sent with height + 1 and height + 2 to ensure timely processing.
     const [r1, r2] = await Promise.allSettled([
       client.forceGetTmClient().broadcastTxSync({
         tx: TxRaw.encode(await bundle(currentBlockHeight + 1)).finish(),

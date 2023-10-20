@@ -60,9 +60,9 @@ account = client.query_account(address=address)
 
 
 def create_bundle(height: int):
-    selfPayTestTx = TxWithTimeout()
+    self_pay_test_tx = TxWithTimeout()
     # test tx to send yourself 1 base denom
-    selfPayTestTx.add_message(
+    self_pay_test_tx.add_message(
         MsgSend(
             from_address=address,
             to_address=address,
@@ -73,7 +73,7 @@ def create_bundle(height: int):
 
     gas_limit = 300000
     fee = f"{int(gas_price * gas_limit)}{fee_denom}"
-    selfPayTestTx.seal(
+    self_pay_test_tx.seal(
         signing_cfgs=[
             SigningCfg.direct(
                 wallet.public_key(),
@@ -82,18 +82,18 @@ def create_bundle(height: int):
         gas_limit=gas_limit,
         timeout_height=height
     )
-    selfPayTestTx.sign(
+    self_pay_test_tx.sign(
         wallet.signer(),
         chain_id,
         account.number
     )
-    selfPayTestTx.complete()
+    self_pay_test_tx.complete()
 
     bundle = [
-        selfPayTestTx.tx.SerializeToString()
+        self_pay_test_tx.tx.SerializeToString()
     ]
 
-    bidTx = TxWithTimeout()
+    bid_tx = TxWithTimeout()
 
     # Create the bid message
     msg = MsgAuctionBid(
@@ -102,9 +102,9 @@ def create_bundle(height: int):
                  denom=fee_denom),
         transactions=bundle,
     )
-    bidTx.add_message(msg)
+    bid_tx.add_message(msg)
 
-    bidTx.seal(
+    bid_tx.seal(
         signing_cfgs=[SigningCfg.direct(
             wallet.public_key(), account.sequence)],
         fee=fee,
@@ -112,15 +112,15 @@ def create_bundle(height: int):
         timeout_height=height
     )
 
-    bidTx.sign(
+    bid_tx.sign(
         wallet.signer(),
         chain_id,
         account.number
     )
 
-    bidTx.complete()
+    bid_tx.complete()
 
-    return bidTx
+    return bid_tx
 
 
 def run_in_parallel(tasks):
@@ -140,6 +140,7 @@ def broadcast(tx: TxWithTimeout):
 
 height = query_block_height()
 
+# Bundle is sent with height + 1 and height + 2 to ensure timely processing.
 run_in_parallel([
     lambda: broadcast(tx=create_bundle(height+1)),
     lambda: broadcast(tx=create_bundle(height+2)),
