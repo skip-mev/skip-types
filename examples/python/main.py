@@ -1,3 +1,4 @@
+from concurrent.futures import ThreadPoolExecutor
 from cosmpy.aerial.client import LedgerClient, NetworkConfig
 from cosmpy.aerial.wallet import LocalWallet
 from cosmpy.aerial.tx import Transaction as Tx, SigningCfg
@@ -53,72 +54,93 @@ network_config = NetworkConfig(
 client = LedgerClient(network_config)
 client.txs = FixedTxRestClient(client.txs.rest_client)
 wallet = create_wallet(mnemonic, address_prefix)
-height = query_block_height()
 
-selfPayTestTx = TxWithTimeout()
-msgs = []
 address = str(wallet.address())
-
-# test tx to send yourself 1 base denom
-selfPayTestTx.add_message(
-    MsgSend(
-        from_address=address,
-        to_address=address,
-        amount=[Coin(amount=str(1),
-                     denom=fee_denom)]
-    )
-)
-
 account = client.query_account(address=address)
 
-gas_limit = 300000
-fee = f"{int(gas_price * gas_limit)}{fee_denom}"
-selfPayTestTx.seal(
-    signing_cfgs=[
-        SigningCfg.direct(
-            wallet.public_key(),
-            account.sequence+1)],  # Sign with sequence + 1 since this is our backrun tx
-    fee=fee,
-    gas_limit=gas_limit,
-    timeout_height=height+2
-)
-selfPayTestTx.sign(
-    wallet.signer(),
-    chain_id,
-    account.number
-)
-selfPayTestTx.complete()
 
-bundle = [
-    selfPayTestTx.tx.SerializeToString()
-]
+def create_bundle(height: int):
+    selfPayTestTx = TxWithTimeout()
+    # test tx to send yourself 1 base denom
+    selfPayTestTx.add_message(
+        MsgSend(
+            from_address=address,
+            to_address=address,
+            amount=[Coin(amount=str(1),
+                         denom=fee_denom)]
+        )
+    )
 
-bidTx = TxWithTimeout()
+    gas_limit = 300000
+    fee = f"{int(gas_price * gas_limit)}{fee_denom}"
+    selfPayTestTx.seal(
+        signing_cfgs=[
+            SigningCfg.direct(
+                wallet.public_key(),
+                account.sequence+1)],  # Sign with sequence + 1 since this is our backrun tx
+        fee=fee,
+        gas_limit=gas_limit,
+        timeout_height=height
+    )
+    selfPayTestTx.sign(
+        wallet.signer(),
+        chain_id,
+        account.number
+    )
+    selfPayTestTx.complete()
 
-# Create the bid message
-msg = MsgAuctionBid(
-    bidder=address,
-    bid=Coin(amount=str(minimum_bid),
-             denom=fee_denom),
-    transactions=bundle,
-)
-bidTx.add_message(msg)
+    bundle = [
+        selfPayTestTx.tx.SerializeToString()
+    ]
 
-bidTx.seal(
-    signing_cfgs=[SigningCfg.direct(
-        wallet.public_key(), account.sequence)],
-    fee=fee,
-    gas_limit=gas_limit,
-    timeout_height=height+2
-)
+    bidTx = TxWithTimeout()
 
-bidTx.sign(
-    wallet.signer(),
-    chain_id,
-    account.number
-)
+    # Create the bid message
+    msg = MsgAuctionBid(
+        bidder=address,
+        bid=Coin(amount=str(minimum_bid),
+                 denom=fee_denom),
+        transactions=bundle,
+    )
+    bidTx.add_message(msg)
 
-bidTx.complete()
+    bidTx.seal(
+        signing_cfgs=[SigningCfg.direct(
+            wallet.public_key(), account.sequence)],
+        fee=fee,
+        gas_limit=gas_limit,
+        timeout_height=height
+    )
 
-tx = client.broadcast_tx(tx=bidTx)
-print(f"Broadcasted bid transaction {tx.tx_hash}")
+    bidTx.sign(
+        wallet.signer(),
+        chain_id,
+        account.number
+    )
+
+    bidTx.complete()
+
+    return bidTx
+
+
+def run_in_parallel(tasks):
+    with ThreadPoolExecutor() as executor:
+        running_tasks = [executor.submit(task) for task in tasks]
+        for running_task in running_tasks:
+            running_task.result()
+
+
+def broadcast(tx: TxWithTimeout):
+    try:
+        tx_result = client.broadcast_tx(tx=tx)
+        print(f"Broadcasted bid transaction {tx_result.tx_hash}")
+    except Exception as e:
+        print(e)
+
+
+height = query_block_height()
+
+run_in_parallel([
+    lambda: broadcast(tx=create_bundle(height+1)),
+    lambda: broadcast(tx=create_bundle(height+2)),
+])
