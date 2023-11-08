@@ -5,11 +5,11 @@
   "main": "index.js",
   "scripts": {},
   "dependencies": {
-    "@cosmjs/cosmwasm-stargate": "^0.31.1",
-    "@cosmjs/proto-signing": "^0.31.1",
+    "@cosmjs/cosmwasm-stargate": "^0.32.0-rc.1",
+    "@cosmjs/proto-signing": "^0.32.0-rc.1",
     "chain-registry": "^1.20.0",
-    "cosmjs-types": "^0.8.0",
-    "skip-types": "^0.1.1"
+    "cosmjs-types": "^0.9.0",
+    "skip-types": "0.1.3-rc.1"
   },
   "author": "",
   "license": "ISC"
